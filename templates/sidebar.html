@@ -1,0 +1,181 @@
+{%
+    set menuSet = {
+        "title" : "App Base2",
+        "icon" : "atom",
+        "link" : "/",
+        "menus" : [
+            {
+                "type" : "one",
+                "text" : "App Settings",
+                "icon" : "edit",
+                "link" : "/"
+            },
+            {
+                "type" : "hr",
+            },
+            {
+                "type" : "one",
+                "text" : "Add Screen",
+                "icon" : "plus-square",
+                "link" : "/addScreen"
+            },
+            {
+                "type" : "hr",
+            },
+            {
+                "type" : "one",
+                "text" : "App Bulid",
+                "icon" : "compress-arrows-alt",
+                "link" : "/appBuild"
+            },
+            {
+                "type" : "hr",
+            },
+            {
+                "type" : "sub",
+                "text" : "Template",
+            },
+            {
+                "type" : "multi",
+                "text" : "Components",
+                "icon" : "cog",
+                "lists" : [
+                    { "type" : "button", "text" : "Buttons", "link" : "/page/buttons" },
+                    { "type" : "button", "text" : "Cards", "link" : "/page/cards" },
+                ],
+            },
+            {
+                "type" : "multi",
+                "text" : "Utilities",
+                "icon" : "wrench",
+                "lists" : [
+                    { "type" : "button", "text" : "Color", "link" : "/page/utilities-color" },
+                    { "type" : "button", "text" : "Borders", "link" : "/page/utilities-border" },
+                    { "type" : "button", "text" : "Animations", "link" : "/page/utilities-animation" },
+                    { "type" : "button", "text" : "Other", "link" : "/page/utilities-other" },
+                ],
+            },
+            {
+                "type" : "one",
+                "text" : "404 Page",
+                "icon" : "file",
+                "link" : "/page/404"
+            },
+            {
+                "type" : "one",
+                "text" : "Charts",
+                "icon" : "chart-area",
+                "link" : "/page/charts"
+            },
+            {
+                "type" : "one",
+                "text" : "Tables",
+                "icon" : "table",
+                "link" : "/page/tables"
+            },
+            {
+                "type" : "hr",
+            },
+        ],
+    }
+%}
+
+<!-- Sidebar -->
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{menuSet['link']}}">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-{{menuSet['icon']}}"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">{{menuSet['title']}}</div>
+    </a>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    {% for menu in menuSet['menus'] %}
+        {% if menu['type'] == 'one' %}
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item">
+            <a class="nav-link" href="{{menu['link']}}">
+                <i class="fas fa-fw fa-{{menu['icon']}}"></i>
+                <span>{{menu['text']}}</span>
+            </a>
+        </li>
+        {% elif menu['type'] == 'hr' %}
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+        {% elif menu['type'] == 'sub' %}
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            {{menu['text']}}
+        </div>
+        {% elif menu['type'] == 'multi' %}
+        <!-- Nav Item - Pages Collapse Menu -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapse{{menu['text']}}" aria-expanded="true" aria-controls="collapse{{menu['text']}}">
+                <i class="fas fa-fw fa-{{menu['icon']}}"></i>
+                <span>{{menu['text']}}</span>
+            </a>
+            <div id="collapse{{menu['text']}}" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    {% for list in menu['lists'] %}
+                        {% if list['type'] == 'title' %}
+                        <h6 class="collapse-header">{{list['text']}}</h6>
+                        {% elif list['type'] == 'button' %}
+                        <a class="collapse-item" href="{{list['link']}}">{{list['text']}}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </li>
+        {% endif %}
+    {% endfor %}
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
+</ul>
+<!-- End of Sidebar -->
+
+
+
+{#
+    show , active
+    set menuSet = {
+        "title" : "App Base2",
+        "icon" : "atom",
+        "link" : "/test",
+        "menus" : [
+            {
+                "type" : "one",
+                "text" : "Dashboard",
+                "icon" : "tachometer-alt",
+                "link" : "/test"
+            },
+            {
+                "type" : "hr",
+            },
+            {
+                "type" : "sub",
+                "text" : "Interface",
+            },
+            {
+                "type" : "multi",
+                "text" : "Components",
+                "icon" : "atom",
+                "lists" : [
+                    { "type" : "title", "text" : "Custom Components:" },
+                    { "type" : "button", "text" : "Buttons", "link" : "/test" },
+                    { "type" : "button", "text" : "Buttons", "link" : "/test" },
+                ],
+            },
+            {
+                "type" : "hr",
+            },
+        ],
+    }
+#}

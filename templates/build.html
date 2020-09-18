@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block head %}
+<!-- 원래 내용 유지 super() -->
+{{ super() }}
+<link href="/static/css/ladda/ladda-themeless.min.css" rel="stylesheet">
+<style>
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">App Build</h6>
+        </div>
+        <div class="card-body">
+
+            <div>
+                <button class="btn btn-success btn-icon-split ladda-button" id="run">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-play"></i>
+                    </span>
+                    <span class="text">Run Android App</span>
+                </button>
+
+                <button class="btn btn-primary btn-icon-split ladda-button" id="make">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-gavel"></i>
+                    </span>
+                    <span class="text">Bulid APK</span>
+                </button>
+
+                <button class="btn btn-danger btn-icon-split" id="stop">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-stop"></i>
+                    </span>
+                    <span class="text">Stop</span>
+                </button>
+            </div>
+
+            <blank></blank>
+
+            <h3 class="m-0 font--bold" style="margin-bottom: 10px !important;">Log</h3>
+            <textarea class="form-control" rows="15" id="log"></textarea>
+        </div>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+
+{% endblock %}
+
+{% block addScript %}
+<script src="/static/js/ladda/spin.min.js"></script>
+<script src="/static/js/ladda/ladda.min.js"></script>
+<script src="/static/js/ladda/ladda.jquery.min.js"></script>
+<script>
+var timer
+
+var runLoading = $('#run').ladda();
+var makeLoading = $('#make').ladda();
+
+$('#run').click(()=>{
+    if(call){
+        return;
+    }
+    setCall();
+    runLoading.ladda( 'start' );
+    getLog();
+
+    $.ajax({
+        method : 'POST',
+        dataType: "json",
+        url : "/runApp",
+        data : {},
+        error : function(request, status, error) {
+            setCall(false);
+            runLoading.ladda( 'stop' );
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        },
+        success : function(data) {
+            setCall(false);
+            runLoading.ladda( 'stop' );
+            if(data.code == "0"){
+                // alert(data.msg);
+                //location.reload();
+            }
+            else{
+                alert(data.msg);
+				//location.reload();
+            }
+        }
+    });
+});
+
+$('#make').click(()=>{
+    if(call){
+        return;
+    }
+    setCall();
+    makeLoading.ladda( 'start' );
+    getLog();
+
+    $.ajax({
+        method : 'POST',
+        dataType: "json",
+        url : "/buildAPK",
+        data : {
+            log_type : 0,
+        },
+        error : function(request, status, error) {
+            setCall(false);
+            makeLoading.ladda( 'stop' );
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        },
+        success : function(data) {
+            setCall(false);
+            makeLoading.ladda( 'stop' );
+            if(data.code == "0"){
+                // alert(data.msg);
+                //location.reload();
+            }
+            else{
+                alert(data.msg);
+				//location.reload();
+            }
+        }
+    });
+});
+
+$('#stop').click(()=>{
+    $.ajax({
+        method : 'POST',
+        dataType: "json",
+        url : "/stop",
+        data : {},
+        error : function(request, status, error) {
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        },
+        success : function(data) {
+            if(data.code == "0"){
+                // alert(data.msg);
+                //location.reload();
+            }
+            else{
+                alert(data.msg);
+				//location.reload();
+            }
+        }
+    });
+});
+
+function getLog(){
+    $.ajax({
+        method : 'POST',
+        dataType: "json",
+        url : "/getLog",
+        data : {},
+        error : function(request, status, error) {
+            // alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        },
+        success : function(data) {
+            let result = '';
+            for(var i=0;i<data.output.length;i++){
+                result += data.output[i]['text'];
+            }
+            $('#log').val(result);
+            $('#log').scrollTop( $("#log")[0].scrollHeight );
+        }
+    });
+
+    if(call){
+        timer = setTimeout(getLog, 500);
+    }
+    else{
+        clearTimeout(timer);
+    }
+}
+
+
+</script>
+{% endblock %}

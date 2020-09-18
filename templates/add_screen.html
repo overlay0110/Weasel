@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block head %}
+<!-- 원래 내용 유지 super() -->
+{{ super() }}
+<style>
+.flexCenter{
+    margin: 0 auto !important;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid" style="display : flex;">
+
+    <view class="container-native flexCenter">
+		<scrollview>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+			<view style="width:100px; height : 500px; background-color : #7EE9D1; margin : 10px"></view>
+		</scrollview>
+	</view>
+
+</div>
+<!-- /.container-fluid -->
+
+{% endblock %}
+
+{% block addScript %}
+<script>
+function rn_header(option){
+    let setting = {
+        left : { type : 'icon', text: 'arrow-left'},
+        title : 'title',
+        right : { type : 'text', text : 'exit'},
+        titleAlign : 'center',
+        headerColor : '#7EE9D1',
+        textColor : '#fff',
+        textSize : 16,
+    }
+
+    for(var key in option){
+        setting[key] = option[key];
+    }
+
+    for(var key in setting){
+        if(setting[key].type != undefined && setting[key].type == 'icon'){
+            setting[key] = `<i class="fas fa-${setting[key].text}" style="font-size : ${setting.textSize};"></i>`;
+        }
+        else if(setting[key].type != undefined && setting[key].type == 'text'){
+            setting[key] = `${setting[key].text}`;
+        }
+
+        if(key == 'textSize'){
+            setting.textSize += 'px';
+        }
+    }
+
+    let headerStyles = `
+    .header{
+        display : flex;
+        background-color : ${setting.headerColor};
+        height : 50px;
+        align-items: center;
+        flex-direction: row;
+    }
+    .headerLeft{
+        width : 60px;
+        padding : 15px;
+    }
+    .headerTitle{
+        padding : 15px;
+        flex : 1;
+    }
+    .headerRight{
+        width : 60px;
+        padding : 15px;
+    }
+    .titleAlign{
+        text-align: ${setting.titleAlign};
+    }
+    .headerTextColor{
+        color : ${setting.textColor};
+    }
+    .headerTextSize{
+        font-size : ${setting.textSize};
+    }
+    `;
+
+    // arrow-left, bars,
+    return `
+    <style>
+    ${headerStyles}
+    </style>
+    <view class="header">
+        <view class="headerLeft"><text class="headerTextColor headerTextSize">${setting.left}</text></view>
+        <view class="headerTitle"><text class="titleAlign headerTextColor headerTextSize">${setting.title}</text></view>
+        <view class="headerRight"><text class="headerTextColor headerTextSize">${setting.right}</text></view>
+    </view>
+    `;
+}
+
+function rn_footer(option){
+    let setting = {
+        titleAlign : 'center',
+        footerColor : '#7EE9D1',
+        textColor : '#fff',
+        activeColor : 'green',
+        textSize : 16,
+        iconSize : 16,
+        items : [],
+    }
+
+    for(var key in option){
+        setting[key] = option[key];
+    }
+
+    let footerStyles = `
+    .footer{
+        display : flex;
+        background-color : ${setting.footerColor};
+        height : 50px;
+        align-items: center;
+        flex-direction: row;
+    }
+    .footerItem{
+        width : 25%;
+        height : 100%;
+        padding : 18px;
+    }
+    .footerItemText{
+        width : 25%;
+        height : 100%;
+        padding : 8px;
+    }
+    .footerTextAlign{
+        display: block;
+        text-align: center;
+    }
+    .footerTextColor{
+        color : ${setting.textColor};
+    }
+    .footerTextSize{
+        font-size : ${setting.textSize}px;
+    }
+    .footerActive{
+        background-color : ${setting.activeColor};
+    }
+    `
+
+    return `
+    <style>
+    ${footerStyles}
+    </style>
+    <div class="footer">
+        <div class="footerItemText footerActive">
+            <i class="fas fa-arrow-left footerTextAlign footerTextColor" style="font-size : ${setting.iconSize}px;"></i>
+            <p class="footerTextAlign footerTextColor footerTextSize">test</p>
+        </div>
+
+        <div class="footerItemText">
+        <i class="fas fa-arrow-left footerTextAlign footerTextColor" style="font-size : ${setting.iconSize}px;"></i>
+            <p class="footerTextAlign footerTextColor footerTextSize">test</p>
+        </div>
+
+        <div class="footerItem">
+            <p class="footerTextAlign footerTextColor footerTextSize">test</p>
+        </div>
+
+        <div class="footerItem">
+            <i class="fas fa-arrow-left footerTextAlign footerTextColor" style="font-size : ${setting.iconSize}px;"></i>
+        </div>
+    </div>
+    `;
+}
+
+$('.container-native').prepend(rn_header({title : 'Search'}));
+$('.container-native').append(rn_footer({title : 'Search'}));
+</script>
+{% endblock %}

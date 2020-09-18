@@ -1,0 +1,11 @@
+blank{
+    display: block;
+    margin-bottom: 20px;
+}
+
+.text-over{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 100%;
+}

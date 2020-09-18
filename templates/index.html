@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block head %}
+<!-- 원래 내용 유지 super() -->
+{{ super() }}
+<style>
+.color-black{
+    color: #000 !important;
+}
+
+.m-search{
+    margin-left : auto;
+    background-color: #ececec;
+    border-radius: 100px;
+	padding-left: 20px;
+	display: flex;
+	align-items: center;
+}
+
+.m-search input{
+	outline: none;
+    border: none;
+    font-size: 15px;
+    background-color: #ececec;
+    border-radius: 100px;
+    padding: 10px 20px;
+}
+
+.flex-center{
+    display: flex;
+    align-items: center;
+}
+
+.left-20{
+    margin-left : 20px;
+}
+
+.c-w{
+    color : #fff;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">App Settings</h6>
+        </div>
+        <div class="card-body">
+            <div class="form-group">
+                <label class="control-label">App Name</label>
+                <input type="text" class="form-control color-black" placeholder="AppBase2" id="app_name" value="{{app_data['app_name']}}" key="app_name">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Package Name OR Bundle ID</label>
+                <input type="text" class="form-control color-black" placeholder="com.overlay.sample" id="app_id" value="{{app_data['app_id']}}" key="app_id">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Android SDK Location</label>
+                <input type="text" class="form-control color-black" placeholder="C:\Users\cube4\AppData\Local\Android\sdk" id="sdk_path" value="{{app_data['sdk_path']}}" key="sdk_path">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">initialRouteName</label>
+                <input type="text" class="form-control color-black" placeholder="Load" id="start_name" value="{{app_data['start_name']}}" key="start_name">
+            </div>
+
+        </div>
+    </div>
+
+    <blank></blank>
+
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Android App 서명 정보</h6>
+        </div>
+        <div class="card-body">
+
+            <div class="form-group">
+                <label class="control-label text-over">MYAPP_RELEASE_STORE_FILE</label>
+                <input type="text" class="form-control color-black only" placeholder="cubewallet.keystore" id="store_file" value="{{app_data['store_file']}}" key="store_file" >
+            </div>
+
+            <div class="form-group">
+                <label class="control-label text-over">MYAPP_RELEASE_KEY_ALIAS</label>
+                <input type="text" class="form-control color-black only" placeholder="cubechain" id="alias" value="{{app_data['alias']}}" key="alias" >
+            </div>
+
+            <div class="form-group">
+                <label class="control-label text-over">MYAPP_RELEASE_STORE_PASSWORD</label>
+                <input type="password" class="form-control color-black only" placeholder="" id="store_password" value="{{app_data['store_password']}}" key="store_password" >
+            </div>
+
+            <div class="form-group">
+                <label class="control-label text-over">MYAPP_RELEASE_KEY_PASSWORD</label>
+                <input type="password" class="form-control color-black only" placeholder="" id="key_password" value="{{app_data['key_password']}}" key="key_password" >
+            </div>
+
+        </div>
+    </div>
+
+    <blank></blank>
+
+    <div class="card shadow">
+        <div class="card-header py-3 flex-center">
+            <h6 class="m-0 font-weight-bold text-primary">Node Module 내역 ({{json_cnt}})</h6>
+
+            <div class="m-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search_input" none="yes">
+            </div>
+
+            <a class="btn btn-info btn-icon-split left-20" id="addBtn">
+                <span class="icon text-white-50">
+                    <i class="fas fa-info-circle"></i>
+                </span>
+                <span class="text c-w">모듈 추가하기</span>
+            </a>
+        </div>
+        <div class="card-body">
+
+            <div class="row" id="m_list">
+                {% for key, value in json_data.items() %}
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <a href="https://www.google.com/search?q=github+{{key}}" style="text-decoration: none;" >
+                        <div class="card border-left-success shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">{{value}}</div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800 m_name">{{key}}</div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fab fa-github fa-2x text-gray-300"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <blank></blank>
+
+</div>
+<!-- /.container-fluid -->
+
+{% endblock %}
+
+
+{% block addScript %}
+<script>
+$('.only').attr('readonly', true);
+
+$('input').change(function(e){
+    let id = $(this)[0].id;
+
+    if($(this).attr('none') == 'yes'){
+        return;
+    } 
+
+    runAjax({key : $('#'+id).attr('key'), value : $('#'+id).attr('value'), edit_value : $('#'+id).val() })
+});
+
+$('#search_input').keyup(function(){
+	var value = $(this).val();
+	$('#m_list > div').hide();
+	var temp = $(".m_name:contains('" + value + "')");
+
+	$(temp).parent().parent().parent().parent().parent().parent().show();
+});
+
+$('#addBtn').click(()=>{
+    $('#mAddModal').modal('show');
+});
+
+$('#mAddCall').click(()=>{
+    if(call){
+        return;
+    }
+    setCall();
+
+    let value = $('#mAddInput').val();
+    $('#mAddModal').modal('hide');
+
+    $.ajax({
+        method : 'POST',
+        dataType: "json",
+        url : "/appNode",
+        data : {
+            v : value,
+        },
+        error : function(request, status, error) {
+            setCall(false);
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        },
+        success : function(data) {
+            setCall(false);
+            if(data.code == "0"){
+                alert(data.msg);
+                location.reload();
+            }
+            else{
+                alert(data.msg);
+				location.reload();
+            }
+        }
+    });
+})
+
+function runAjax(option){
+    if(call){
+        return;
+    }
+    setCall();
+
+    $.ajax({
+        method : 'POST',
+        dataType: "json",
+        url : "/appEdit",
+        data : {
+            "key" : option.key,
+			"value" : option.value,
+            "edit_value" : option.edit_value,
+        },
+        error : function(request, status, error) {
+            setCall(false);
+            alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        },
+        success : function(data) {
+            setCall(false);
+            if(data.code == "0"){
+                alert(data.msg);
+                location.reload();
+            }
+            else{
+                alert(data.msg);
+				location.reload();
+            }
+        }
+    });
+}
+</script>
+{% endblock %}
